@@ -8,6 +8,7 @@
     "rootDir": "./src" /* Specify the root folder within your source files. */,
     /* JavaScript Support */
     /* Emit */
+    "declaration": true,
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "removeComments": false /* Disable emitting comments. */,
     "sourceMap": true,
@@ -25,5 +26,5 @@
     /* Completeness */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
