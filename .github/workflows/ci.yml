@@ -1,0 +1,42 @@
+name: CI - Test & Lint PR
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+    
+jobs:
+        lint:
+          runs-on: ubuntu-latest
+      
+          steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18.x'
+                cache: 'yarn'
+            - name: Install dependencies
+              run: yarn --frozen-lockfile
+
+            - name: Lint & Format
+              run: yarn lint
+        test:
+          runs-on: ubuntu-latest
+      
+          steps:
+            - uses: actions/checkout@v3
+            - name: Test
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18.x'
+                cache: 'yarn'
+            - name: Install dependencies
+              run: yarn --frozen-lockfile
+
+            - name: Test the code
+              run: yarn test --passWithNoTests
