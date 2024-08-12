@@ -24,3 +24,7 @@ npm install tflite-object-detection-tracking
 ## Contribution
 
 Contributors are welcome! Please open a PR.
+
+### Expo Users:
+
+- To test your changes in your application, before PR & merge, you will need to modify the `metro.config` file as [described in the docs](https://docs.expo.dev/guides/monorepos/#modify-the-metro-config) to allow for sym-linking
