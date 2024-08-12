@@ -1,7 +1,7 @@
 name: Publish Package to npmjs
 on:
   release:
-    types: [published]
+    types: [created]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,14 +10,11 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm publish --provenance --access public
-        working-directory: ./dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
