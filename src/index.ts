@@ -15,9 +15,18 @@ export interface RecognizedObject {
   missedCount: number;
 }
 
+/**
+ * FrameRecognition arguments:
+ * @param height: the height of the device
+ * @param width: the width of the device
+ * @param recognitionCount: optional, minimum number of items you want before being considered as a top object
+ * @param score: optional, minimum threshold of box score to keep track of
+ */
 interface Props {
   height: number;
   width: number;
+  recognitionCount?: number;
+  score?: number;
 }
 
 /**
@@ -30,25 +39,29 @@ export class FrameRecognition {
   recognizedObjectsCount: number;
   height: number;
   width: number;
+  recognitionCount: number;
+  scoreThreshold: number;
 
-  constructor({ height, width }: Props) {
+  constructor({ height, width, recognitionCount = 20, score = 0.25 }: Props) {
     this.height = height;
     this.width = width;
     this.trackingObjects = {};
     this.recognizedObjectsCount = 0;
+    this.recognitionCount = recognitionCount;
+    this.scoreThreshold = score;
   }
 
   /**
    * getConfidentObject are the most confident about.
    * It finds the object with the highest score & count.
    * @returns RecognizedObject
-   * @todo llow more than 1 output item
+   * @todo allow more than 1 output item
    */
   getConfidentObject() {
     let topObject: RecognizedObject | null = null;
 
     for (const recognized of Object.values(this.trackingObjects)) {
-      if (recognized.recognitionCount < 10) {
+      if (recognized.recognitionCount < 20) {
         continue;
       }
 
@@ -85,7 +98,7 @@ export class FrameRecognition {
       const label = labels[i];
       const score = scores[i];
 
-      if (score < 0.25) {
+      if (score < this.scoreThreshold) {
         continue;
       }
 
