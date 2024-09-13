@@ -1,6 +1,6 @@
 {
   "name": "tflite-object-detection-tracking",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A package to smooth object detection results, from tflite model output",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
