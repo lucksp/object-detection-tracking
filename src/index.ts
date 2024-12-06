@@ -61,7 +61,7 @@ export class FrameRecognition {
     let topObject: RecognizedObject | null = null;
 
     for (const recognized of Object.values(this.trackingObjects)) {
-      if (recognized.recognitionCount < 20) {
+      if (recognized.recognitionCount < this.recognitionCount) {
         continue;
       }
 
