@@ -21,12 +21,14 @@ export interface RecognizedObject {
  * @param width: the width of the device
  * @param recognitionCount: optional, minimum number of items you want before being considered as a top object
  * @param score: optional, minimum threshold of box score to keep track of
+ * @param checkCount: optional, how many items to track for each tracked object
  */
 interface Props {
   height: number;
   width: number;
   recognitionCount?: number;
   score?: number;
+  checkCount?: number;
 }
 
 /**
@@ -37,7 +39,7 @@ interface Props {
 export class FrameRecognition {
   private static readonly MAX_HISTORY_SIZE = 50;
   private static readonly MAX_MISSED_COUNT = 30;
-  private static readonly TRACKING_THRESHOLD = 0.03;
+  private static readonly TRACKING_THRESHOLD = 0.5;
 
   private trackingObjects: Map<number, RecognizedObject>;
   private recognizedObjectsCount: number;
@@ -45,14 +47,22 @@ export class FrameRecognition {
   private readonly width: number;
   private readonly recognitionCount: number;
   private readonly scoreThreshold: number;
+  private readonly checkCount: number;
 
-  constructor({ height, width, recognitionCount = 20, score = 0.25 }: Props) {
+  constructor({
+    height,
+    width,
+    recognitionCount = 20,
+    score = 0.25,
+    checkCount = 50,
+  }: Props) {
     this.height = height;
     this.width = width;
     this.trackingObjects = new Map();
     this.recognizedObjectsCount = 0;
     this.recognitionCount = recognitionCount;
     this.scoreThreshold = score;
+    this.checkCount = checkCount;
   }
 
   // Memoize and optimize confident object retrieval
@@ -69,7 +79,7 @@ export class FrameRecognition {
     const currentTime = Date.now();
     if (
       this._cachedConfidentObject &&
-      currentTime - this._lastConfidentObjectCheck < 100
+      currentTime - this._lastConfidentObjectCheck < this.checkCount
     ) {
       return this._cachedConfidentObject;
     }
